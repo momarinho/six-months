@@ -947,21 +947,23 @@ body {
   box-shadow: 0 8px 25px rgba(168, 71, 50, 0.4);
 }
 
-/* Lightbox Modal */
+/* Lightbox Modal (High-Res Scrollable View for Mobile Phones) */
 .lightbox {
   position: fixed;
   inset: 0;
   z-index: 100000;
-  background: rgba(43, 26, 19, 0.92);
+  background: rgba(30, 18, 12, 0.95);
   backdrop-filter: blur(15px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 2rem;
+  justify-content: flex-start;
+  padding: 1rem 0.5rem;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s ease;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .lightbox.active {
   opacity: 1;
@@ -969,24 +971,150 @@ body {
 }
 
 .lightbox-close {
-  position: absolute;
-  top: 1.5rem;
-  right: 2rem;
+  position: fixed;
+  top: 1rem;
+  right: 1.4rem;
   font-size: 2.5rem;
   color: #ffffff;
   cursor: pointer;
-  transition: color 0.2s ease;
+  z-index: 100001;
+  transition: color 0.2s ease, transform 0.2s ease;
+  background: rgba(0,0,0,0.5);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 .lightbox-close:hover {
   color: var(--pink);
+  transform: scale(1.1);
+}
+
+.lightbox-scroll-wrapper {
+  width: 100%;
+  max-width: 820px;
+  margin: 3.5rem auto 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .lightbox img {
-  max-width: 90vw;
-  max-height: 80vh;
+  width: 100%;
+  max-width: 760px;
+  height: auto;
   object-fit: contain;
   border-radius: 12px;
   box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 122, 99, 0.3);
+  background: #ffffff;
+}
+
+@media (max-width: 600px) {
+  .lightbox-scroll-wrapper {
+    margin-top: 3.8rem;
+    padding: 0 0.4rem;
+  }
+  .lightbox img {
+    min-width: 480px;
+    width: 100%;
+  }
+}
+
+.lightbox-caption {
+  margin-top: 1.2rem;
+  font-family: 'Caveat', cursive;
+  font-size: 1.25rem;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+/* Letter action buttons */
+.letter-actions-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.letter-action-btn {
+  font-family: 'Caveat', cursive;
+  font-size: 1.15rem;
+  font-weight: 600;
+  padding: 0.5rem 1.2rem;
+  border-radius: 30px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.25s ease;
+  user-select: none;
+}
+.letter-action-btn.primary {
+  background: var(--pink-dk);
+  color: #ffffff;
+  border: 2px solid var(--pink-dk);
+  box-shadow: 0 4px 14px rgba(168, 71, 50, 0.25);
+}
+.letter-action-btn.primary:hover {
+  background: var(--pink);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(168, 71, 50, 0.35);
+}
+.letter-action-btn.secondary {
+  background: rgba(251, 246, 239, 0.95);
+  color: var(--text);
+  border: 2px solid var(--border-dark);
+}
+.letter-action-btn.secondary:hover {
+  background: #ffffff;
+  color: var(--pink-dk);
+  transform: translateY(-2px);
+}
+
+/* Handwritten Transcript Unfolded Box */
+.letter-transcript-box {
+  margin-top: 1.4rem;
+  text-align: left;
+  animation: fadeIn 0.4s ease both;
+}
+.transcript-paper {
+  background: #fbf6ef;
+  border: 2px solid var(--border-dark);
+  border-radius: 16px;
+  padding: 1.8rem 1.6rem;
+  color: #2b1a13;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  line-height: 1.85;
+  box-shadow: inset 0 0 20px rgba(110, 80, 64, 0.08), 0 8px 25px rgba(69, 48, 38, 0.12);
+}
+.transcript-heading {
+  font-family: 'Caveat', cursive;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--pink-dk);
+  display: block;
+  margin-bottom: 1rem;
+}
+.transcript-paper p {
+  margin-bottom: 1.1rem;
+}
+.transcript-sign {
+  font-family: 'Caveat', cursive;
+  font-size: 1.45rem;
+  color: var(--pink-dk);
+  margin-top: 1.4rem;
+}
+.transcript-ps {
+  font-size: 0.98rem;
+  color: var(--muted);
+  font-style: italic;
 }
 
 .lightbox-caption {
@@ -1424,6 +1552,24 @@ body {
         <div class="letter-overlay" id="letter-overlay">
           <button class="zoom-btn" onclick="openLightbox()">🔍 Zoom Letter</button>
           <label for="letter-file-input" class="change-photo-btn">📷 Change Image</label>
+        </div>
+      </div>
+
+      <!-- Action Buttons Bar for Mobile & Desktop -->
+      <div class="letter-actions-bar">
+        <button class="letter-action-btn primary" onclick="openLightbox()">🔍 Zoom & Scroll Letter</button>
+        <button class="letter-action-btn secondary" id="toggle-transcript-btn" onclick="toggleTranscript()">📖 Read Text Version</button>
+      </div>
+
+      <!-- Collapsible Text Transcript Card for Perfect Mobile Reading -->
+      <div class="letter-transcript-box" id="letter-transcript-box" style="display: none;">
+        <div class="transcript-paper">
+          <span class="transcript-heading">Happy 6 months, my love!</span>
+          <p>I won't pretend this journey has been easy or without its heavy days. Distance is hard, and sometimes fears and misunderstandings get in the way. But through every silence, every challenge, my heart has never wavered about one simple truth: <strong>I choose you.</strong></p>
+          <p>Loving you has made me open up parts of my heart I used to keep locked. It's scary to be this vulnerable, but you make every risk, every mile, and every ounce of effort worth it. I don't just love you when things are light and smooth. I love you in the messy and scary moments, in the quiet ones, and through every storm.</p>
+          <p>Thank you for these six months together. I believe in what we have, I believe in our future, and I'm right here.</p>
+          <p class="transcript-sign"><strong>I love you, silly!! 💜</strong></p>
+          <p class="transcript-ps"><em>PS: Safira helped in writing this while she sleep in my lap 🐾</em></p>
         </div>
       </div>
 
@@ -2115,7 +2261,7 @@ body {
     const lbCap = lb ? lb.querySelector('.lightbox-caption') : null;
     if (letterImg && letterImg.classList.contains('active') && lb && lbImg) {
       lbImg.src = letterImg.src;
-      if (lbCap) lbCap.textContent = 'Handwritten Letter — Click anywhere to close';
+      if (lbCap) lbCap.textContent = 'Handwritten Letter — Scroll to read • Tap anywhere to close';
       lb.classList.add('active');
     }
   };
@@ -2134,6 +2280,21 @@ body {
   window.closeLightbox = function() {
     const lb = document.getElementById('lightbox');
     if (lb) lb.classList.remove('active');
+  };
+
+  // Toggle collapsible transcript text card
+  window.toggleTranscript = function() {
+    const box = document.getElementById('letter-transcript-box');
+    const btn = document.getElementById('toggle-transcript-btn');
+    if (!box) return;
+    if (box.style.display === 'none') {
+      box.style.display = 'block';
+      if (btn) btn.innerHTML = '📖 Hide Text Version';
+      box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } else {
+      box.style.display = 'none';
+      if (btn) btn.innerHTML = '📖 Read Text Version';
+    }
   };
 
   // Check LocalStorage saved image first
@@ -2183,11 +2344,13 @@ body {
 })();
 </script>
 
-<!-- Lightbox Modal for Handwritten Letter Fullscreen View -->
+<!-- Lightbox Modal for Fullscreen View -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <span class="lightbox-close">&times;</span>
-  <img id="lightbox-img" src="" alt="Full size handwritten letter"/>
-  <p class="lightbox-caption">Handwritten Letter — Click anywhere to close</p>
+  <div class="lightbox-scroll-wrapper">
+    <img id="lightbox-img" src="" alt="Full size handwritten letter"/>
+    <p class="lightbox-caption">Handwritten Letter — Scroll to read • Tap anywhere to close</p>
+  </div>
 </div>
 
 </body>
